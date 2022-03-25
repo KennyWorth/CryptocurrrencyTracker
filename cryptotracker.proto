@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+message GetCoinList {
+    message Coin {
+        string id = 1;
+        string symbol = 2;
+        string name =3;
+    }
+    repeated Coin coin = 1;
+}
