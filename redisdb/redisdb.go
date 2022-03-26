@@ -31,13 +31,26 @@ func Set(key, value string) error {
 	return err
 }
 
+func SetByteArray(key string, value []byte) error {
+	client := RClient()
+	err := client.Set(key, value, 0).Err()
+	return err
+}
+
 func Get(key string) (string, error) {
 	client := RClient()
 	val, err := client.Get(key).Result()
 	if err == redis.Nil {
 		fmt.Println("no value found in cache")
 	}
-	// fmt.Println(key, val)
+	return val, err
+}
+func GetByteArray(key string) ([]byte, error) {
+	client := RClient()
+	val, err := client.Get(key).Bytes()
+	if err == redis.Nil {
+		fmt.Println("no value found in cache")
+	}
 	return val, err
 }
 

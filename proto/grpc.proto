@@ -1,0 +1,31 @@
+syntax = "proto3";
+package ctrackergrpc;
+option go_package = "../pb";
+
+message CoinInfo {
+    message CoinIds {
+        string id = 1;
+        string token = 2;
+        string name = 3;
+    }
+    repeated CoinInfo coinList = 1;
+}
+message Empty {}
+
+message CoinRequest {
+    repeated string request = 1;
+}
+
+message CoinResponse {
+    repeated CoinIds coinList = 1;
+}
+
+message CoinIds {
+    string id = 1;
+    string token = 2;
+    string name = 3;
+}
+
+service GetAllCoins {
+    rpc Coins(Empty) returns (CoinResponse) {}
+}
