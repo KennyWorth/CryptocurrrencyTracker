@@ -25,7 +25,7 @@ func Ping() error {
 	return nil
 }
 
-func Set(key, value string) error {
+func Set(key string, value string) error {
 	client := RClient()
 	err := client.Set(key, value, 0).Err()
 	return err

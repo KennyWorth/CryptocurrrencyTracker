@@ -2,10 +2,8 @@ package ctrackergrpc
 
 import (
 	"fmt"
-	"io/ioutil"
 	"log"
 	"net"
-	"net/http"
 	"time"
 
 	"ctracker/pb"
@@ -22,7 +20,7 @@ const (
 func NewGrpcServer() {
 	grpcServer := grpc.NewServer()
 	service := service.NewCryptoGrpcService()
-	pb.RegisterGetAllCoinsServer(grpcServer, service)
+	pb.RegisterGetCoinServer(grpcServer, service)
 	reflection.Register(grpcServer)
 	lis, err := net.Listen("tcp", fmt.Sprintf("localhost:%v", port))
 	if err != nil {
@@ -38,20 +36,20 @@ func NewGrpcServer() {
 	fmt.Println("shutdown completed")
 }
 
-func UpdateFromApi(command string) (pb.CoinResponse, error) {
-	url := fmt.Sprintf("api.coingecko.com/api/v3/%v", command)
-	method := "GET"
-	client := &http.Client{}
-	req, err := http.NewRequest(method, url, nil)
-	if err != nil {
-		return pb.CoinResponse{}, err
-	}
-	res, err := client.Do(req)
-	if err != nil {
-		return pb.CoinResponse{}, err
-	}
-	defer res.Body.Close()
-	body, err := ioutil.ReadAll(res.Body)
-	fmt.Print(body)
-	return pb.CoinResponse{}, err
-}
+// func UpdateFromApi(command string) (pb.CoinListResponse, error) {
+// 	url := fmt.Sprintf("api.coingecko.com/api/v3/%v", command)
+// 	method := "GET"
+// 	client := &http.Client{}
+// 	req, err := http.NewRequest(method, url, nil)
+// 	if err != nil {
+// 		return pb.CoinListResponse{}, err
+// 	}
+// 	res, err := client.Do(req)
+// 	if err != nil {
+// 		return pb.CoinListResponse{}, err
+// 	}
+// 	defer res.Body.Close()
+// 	body, err := ioutil.ReadAll(res.Body)
+// 	fmt.Print(body)
+// 	return pb.CoinListResponse{}, err
+// }

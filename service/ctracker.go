@@ -3,9 +3,10 @@ package service
 import (
 	"context"
 	"ctracker/apicall"
-	"ctracker/cache"
+	cache "ctracker/cache"
 	"ctracker/pb"
 	"fmt"
+	"strconv"
 )
 
 type CryptoService struct {
@@ -14,10 +15,9 @@ type CryptoService struct {
 }
 
 func NewService() CryptoService {
-	fmt.Println("Hello, World!")
 	c := cache.NewCryptoCache()
 	// build cluster if not present
-	c.NewCluster()
+	// c.NewCluster()
 	return CryptoService{
 		cache: c,
 	}
@@ -25,7 +25,7 @@ func NewService() CryptoService {
 
 type CryptoGrpcService struct {
 	// holds the service and cache
-	pb.UnimplementedGetAllCoinsServer
+	pb.UnimplementedGetCoinServer
 	// cache cache.CryptoCache
 }
 
@@ -37,12 +37,27 @@ func NewCryptoGrpcService() *CryptoGrpcService {
 		// cache: c,
 	}
 }
-func (s *CryptoGrpcService) Coins(ctx context.Context, empty *pb.Empty) (*pb.CoinResponse, error) {
+func (s *CryptoGrpcService) Coins(ctx context.Context, empty *pb.Empty) (*pb.CoinListResponse, error) {
 	fmt.Print("Coins here")
 	response, err := apicall.CoinListRoutine("coins/list")
 	if err != nil {
 		return nil, err
 	}
 	fmt.Println("no errors before return response")
+	return response, nil
+}
+
+func (v *CryptoGrpcService) CoinPrice(ctx context.Context, marketPrice *pb.MarketPriceRequest) (*pb.MarketPriceResponse, error) {
+	id := marketPrice.Id
+	vsCurrency := marketPrice.VsCurrency
+	daysRequest := strconv.FormatInt(marketPrice.Days, 10)
+	apiCommandFormat := ("coins/" + id + "/market_chart?vs_currency=" + vsCurrency + "&days=" + daysRequest)
+	fmt.Println("\nRequest: " + apiCommandFormat)
+	response, err := apicall.MarketPriceRoutine(apiCommandFormat, id)
+	if err != nil {
+		return nil, err
+	}
+	fmt.Println("no errors before return response")
+	// fmt.Println(response)
 	return response, nil
 }

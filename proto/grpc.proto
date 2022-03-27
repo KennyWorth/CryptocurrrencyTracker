@@ -10,22 +10,74 @@ message CoinInfo {
     }
     repeated CoinInfo coinList = 1;
 }
+
 message Empty {}
 
-message CoinRequest {
+// API Request URL "/<id>/market_chart?vs_currency=<vs_currency>&days=<days>"
+message MarketPriceRequest {
+    string id = 1;
+    string vs_currency = 2;
+    int64 days = 3;
+}
+message MarketPriceResponse {
+    repeated MarketCaps marketcaps = 1;
+    repeated PricePoints prices = 2;
+    repeated TotalVolumePoints totalvolumes = 3;
+}
+// Return from API Request for MarketPriceRequest"
+message MarketPriceInfo {
+    message MarketCaps{
+        int64 mcap_timestamp = 1;
+        double market_cap = 2;
+    }
+    message PricePoints {
+        int64 ppoint_timestamp = 1;
+        double prices = 2;
+    }
+    message TotalVolumePoints {
+        int64 tv_timestamp = 1;
+        double total_volume = 2;
+    }
+    repeated MarketCaps marketcaps = 1;
+    repeated PricePoints prices = 2;
+    repeated TotalVolumePoints totalvolumes = 3;
+}
+// API Request URL "/coins/list"
+message CoinListRequest {
     repeated string request = 1;
 }
-
-message CoinResponse {
+// Return from API Request CoinListRequest"
+message CoinListResponse {
     repeated CoinIds coinList = 1;
 }
-
+// JSON format that CoinGecko returns for Coins from API call "/coins/list"
 message CoinIds {
     string id = 1;
-    string token = 2;
+    string symbol = 2;
     string name = 3;
 }
-
-service GetAllCoins {
-    rpc Coins(Empty) returns (CoinResponse) {}
+message MarketCaps {
+    int64 timestamp = 1;
+    double market_cap = 2;
 }
+message PricePoints {
+    int64 timestamp = 1;
+    double prices = 2;
+}
+message TotalVolumePoints {
+    int64 timestamp = 1;
+    double total_volume = 2;
+}
+
+service GetCoin {
+    // Gets list of all coins on CoinGecko and compares to cache. If cached data is older than 24h
+    // then Coins will replace old cached data with updated coins list.
+    rpc Coins(Empty) returns (CoinListResponse) {}
+    // Gets current market price of a specified coin compared to usd within the range of the requested amount of days
+    // example: https://api.coingecko.com/api/v3/coins/bitcoin/market_chart?vs_currency=usd&days=5
+    // if cached data is older that 15 minutes, will cache updated prices during request.
+    rpc CoinPrice(MarketPriceRequest) returns (MarketPriceResponse) {}
+}
+
+// Refresh Proto & gRPC Proto
+// protoc grpc.proto --go_out=./ --go-grpc_out=./

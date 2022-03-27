@@ -105,16 +105,19 @@ func (*Empty) Descriptor() ([]byte, []int) {
 	return file_grpc_proto_rawDescGZIP(), []int{1}
 }
 
-type CoinRequest struct {
+// API Request URL "/<id>/market_chart?vs_currency=<vs_currency>&days=<days>"
+type MarketPriceRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Request []string `protobuf:"bytes,1,rep,name=request,proto3" json:"request,omitempty"`
+	Id         string `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	VsCurrency string `protobuf:"bytes,2,opt,name=vs_currency,json=vsCurrency,proto3" json:"vs_currency,omitempty"`
+	Days       int64  `protobuf:"varint,3,opt,name=days,proto3" json:"days,omitempty"`
 }
 
-func (x *CoinRequest) Reset() {
-	*x = CoinRequest{}
+func (x *MarketPriceRequest) Reset() {
+	*x = MarketPriceRequest{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_grpc_proto_msgTypes[2]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -122,13 +125,13 @@ func (x *CoinRequest) Reset() {
 	}
 }
 
-func (x *CoinRequest) String() string {
+func (x *MarketPriceRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*CoinRequest) ProtoMessage() {}
+func (*MarketPriceRequest) ProtoMessage() {}
 
-func (x *CoinRequest) ProtoReflect() protoreflect.Message {
+func (x *MarketPriceRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_grpc_proto_msgTypes[2]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -140,28 +143,44 @@ func (x *CoinRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use CoinRequest.ProtoReflect.Descriptor instead.
-func (*CoinRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use MarketPriceRequest.ProtoReflect.Descriptor instead.
+func (*MarketPriceRequest) Descriptor() ([]byte, []int) {
 	return file_grpc_proto_rawDescGZIP(), []int{2}
 }
 
-func (x *CoinRequest) GetRequest() []string {
+func (x *MarketPriceRequest) GetId() string {
 	if x != nil {
-		return x.Request
+		return x.Id
 	}
-	return nil
+	return ""
 }
 
-type CoinResponse struct {
+func (x *MarketPriceRequest) GetVsCurrency() string {
+	if x != nil {
+		return x.VsCurrency
+	}
+	return ""
+}
+
+func (x *MarketPriceRequest) GetDays() int64 {
+	if x != nil {
+		return x.Days
+	}
+	return 0
+}
+
+type MarketPriceResponse struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	CoinList []*CoinIds `protobuf:"bytes,1,rep,name=coinList,proto3" json:"coinList,omitempty"`
+	Marketcaps   []*MarketCaps        `protobuf:"bytes,1,rep,name=marketcaps,proto3" json:"marketcaps,omitempty"`
+	Prices       []*PricePoints       `protobuf:"bytes,2,rep,name=prices,proto3" json:"prices,omitempty"`
+	Totalvolumes []*TotalVolumePoints `protobuf:"bytes,3,rep,name=totalvolumes,proto3" json:"totalvolumes,omitempty"`
 }
 
-func (x *CoinResponse) Reset() {
-	*x = CoinResponse{}
+func (x *MarketPriceResponse) Reset() {
+	*x = MarketPriceResponse{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_grpc_proto_msgTypes[3]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -169,13 +188,13 @@ func (x *CoinResponse) Reset() {
 	}
 }
 
-func (x *CoinResponse) String() string {
+func (x *MarketPriceResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*CoinResponse) ProtoMessage() {}
+func (*MarketPriceResponse) ProtoMessage() {}
 
-func (x *CoinResponse) ProtoReflect() protoreflect.Message {
+func (x *MarketPriceResponse) ProtoReflect() protoreflect.Message {
 	mi := &file_grpc_proto_msgTypes[3]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -187,32 +206,207 @@ func (x *CoinResponse) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use CoinResponse.ProtoReflect.Descriptor instead.
-func (*CoinResponse) Descriptor() ([]byte, []int) {
+// Deprecated: Use MarketPriceResponse.ProtoReflect.Descriptor instead.
+func (*MarketPriceResponse) Descriptor() ([]byte, []int) {
 	return file_grpc_proto_rawDescGZIP(), []int{3}
 }
 
-func (x *CoinResponse) GetCoinList() []*CoinIds {
+func (x *MarketPriceResponse) GetMarketcaps() []*MarketCaps {
+	if x != nil {
+		return x.Marketcaps
+	}
+	return nil
+}
+
+func (x *MarketPriceResponse) GetPrices() []*PricePoints {
+	if x != nil {
+		return x.Prices
+	}
+	return nil
+}
+
+func (x *MarketPriceResponse) GetTotalvolumes() []*TotalVolumePoints {
+	if x != nil {
+		return x.Totalvolumes
+	}
+	return nil
+}
+
+// Return from API Request for MarketPriceRequest"
+type MarketPriceInfo struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Marketcaps   []*MarketPriceInfo_MarketCaps        `protobuf:"bytes,1,rep,name=marketcaps,proto3" json:"marketcaps,omitempty"`
+	Prices       []*MarketPriceInfo_PricePoints       `protobuf:"bytes,2,rep,name=prices,proto3" json:"prices,omitempty"`
+	Totalvolumes []*MarketPriceInfo_TotalVolumePoints `protobuf:"bytes,3,rep,name=totalvolumes,proto3" json:"totalvolumes,omitempty"`
+}
+
+func (x *MarketPriceInfo) Reset() {
+	*x = MarketPriceInfo{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_grpc_proto_msgTypes[4]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *MarketPriceInfo) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*MarketPriceInfo) ProtoMessage() {}
+
+func (x *MarketPriceInfo) ProtoReflect() protoreflect.Message {
+	mi := &file_grpc_proto_msgTypes[4]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use MarketPriceInfo.ProtoReflect.Descriptor instead.
+func (*MarketPriceInfo) Descriptor() ([]byte, []int) {
+	return file_grpc_proto_rawDescGZIP(), []int{4}
+}
+
+func (x *MarketPriceInfo) GetMarketcaps() []*MarketPriceInfo_MarketCaps {
+	if x != nil {
+		return x.Marketcaps
+	}
+	return nil
+}
+
+func (x *MarketPriceInfo) GetPrices() []*MarketPriceInfo_PricePoints {
+	if x != nil {
+		return x.Prices
+	}
+	return nil
+}
+
+func (x *MarketPriceInfo) GetTotalvolumes() []*MarketPriceInfo_TotalVolumePoints {
+	if x != nil {
+		return x.Totalvolumes
+	}
+	return nil
+}
+
+// API Request URL "/coins/list"
+type CoinListRequest struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Request []string `protobuf:"bytes,1,rep,name=request,proto3" json:"request,omitempty"`
+}
+
+func (x *CoinListRequest) Reset() {
+	*x = CoinListRequest{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_grpc_proto_msgTypes[5]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *CoinListRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CoinListRequest) ProtoMessage() {}
+
+func (x *CoinListRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_grpc_proto_msgTypes[5]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CoinListRequest.ProtoReflect.Descriptor instead.
+func (*CoinListRequest) Descriptor() ([]byte, []int) {
+	return file_grpc_proto_rawDescGZIP(), []int{5}
+}
+
+func (x *CoinListRequest) GetRequest() []string {
+	if x != nil {
+		return x.Request
+	}
+	return nil
+}
+
+// Return from API Request CoinListRequest"
+type CoinListResponse struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	CoinList []*CoinIds `protobuf:"bytes,1,rep,name=coinList,proto3" json:"coinList,omitempty"`
+}
+
+func (x *CoinListResponse) Reset() {
+	*x = CoinListResponse{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_grpc_proto_msgTypes[6]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *CoinListResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CoinListResponse) ProtoMessage() {}
+
+func (x *CoinListResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_grpc_proto_msgTypes[6]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CoinListResponse.ProtoReflect.Descriptor instead.
+func (*CoinListResponse) Descriptor() ([]byte, []int) {
+	return file_grpc_proto_rawDescGZIP(), []int{6}
+}
+
+func (x *CoinListResponse) GetCoinList() []*CoinIds {
 	if x != nil {
 		return x.CoinList
 	}
 	return nil
 }
 
+// JSON format that CoinGecko returns for Coins from API call "/coins/list"
 type CoinIds struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Id    string `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	Token string `protobuf:"bytes,2,opt,name=token,proto3" json:"token,omitempty"`
-	Name  string `protobuf:"bytes,3,opt,name=name,proto3" json:"name,omitempty"`
+	Id     string `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	Symbol string `protobuf:"bytes,2,opt,name=symbol,proto3" json:"symbol,omitempty"`
+	Name   string `protobuf:"bytes,3,opt,name=name,proto3" json:"name,omitempty"`
 }
 
 func (x *CoinIds) Reset() {
 	*x = CoinIds{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_grpc_proto_msgTypes[4]
+		mi := &file_grpc_proto_msgTypes[7]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -225,7 +419,7 @@ func (x *CoinIds) String() string {
 func (*CoinIds) ProtoMessage() {}
 
 func (x *CoinIds) ProtoReflect() protoreflect.Message {
-	mi := &file_grpc_proto_msgTypes[4]
+	mi := &file_grpc_proto_msgTypes[7]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -238,7 +432,7 @@ func (x *CoinIds) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CoinIds.ProtoReflect.Descriptor instead.
 func (*CoinIds) Descriptor() ([]byte, []int) {
-	return file_grpc_proto_rawDescGZIP(), []int{4}
+	return file_grpc_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *CoinIds) GetId() string {
@@ -248,9 +442,9 @@ func (x *CoinIds) GetId() string {
 	return ""
 }
 
-func (x *CoinIds) GetToken() string {
+func (x *CoinIds) GetSymbol() string {
 	if x != nil {
-		return x.Token
+		return x.Symbol
 	}
 	return ""
 }
@@ -260,6 +454,171 @@ func (x *CoinIds) GetName() string {
 		return x.Name
 	}
 	return ""
+}
+
+type MarketCaps struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Timestamp int64   `protobuf:"varint,1,opt,name=timestamp,proto3" json:"timestamp,omitempty"`
+	MarketCap float64 `protobuf:"fixed64,2,opt,name=market_cap,json=marketCap,proto3" json:"market_cap,omitempty"`
+}
+
+func (x *MarketCaps) Reset() {
+	*x = MarketCaps{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_grpc_proto_msgTypes[8]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *MarketCaps) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*MarketCaps) ProtoMessage() {}
+
+func (x *MarketCaps) ProtoReflect() protoreflect.Message {
+	mi := &file_grpc_proto_msgTypes[8]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use MarketCaps.ProtoReflect.Descriptor instead.
+func (*MarketCaps) Descriptor() ([]byte, []int) {
+	return file_grpc_proto_rawDescGZIP(), []int{8}
+}
+
+func (x *MarketCaps) GetTimestamp() int64 {
+	if x != nil {
+		return x.Timestamp
+	}
+	return 0
+}
+
+func (x *MarketCaps) GetMarketCap() float64 {
+	if x != nil {
+		return x.MarketCap
+	}
+	return 0
+}
+
+type PricePoints struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Timestamp int64   `protobuf:"varint,1,opt,name=timestamp,proto3" json:"timestamp,omitempty"`
+	Prices    float64 `protobuf:"fixed64,2,opt,name=prices,proto3" json:"prices,omitempty"`
+}
+
+func (x *PricePoints) Reset() {
+	*x = PricePoints{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_grpc_proto_msgTypes[9]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *PricePoints) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*PricePoints) ProtoMessage() {}
+
+func (x *PricePoints) ProtoReflect() protoreflect.Message {
+	mi := &file_grpc_proto_msgTypes[9]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use PricePoints.ProtoReflect.Descriptor instead.
+func (*PricePoints) Descriptor() ([]byte, []int) {
+	return file_grpc_proto_rawDescGZIP(), []int{9}
+}
+
+func (x *PricePoints) GetTimestamp() int64 {
+	if x != nil {
+		return x.Timestamp
+	}
+	return 0
+}
+
+func (x *PricePoints) GetPrices() float64 {
+	if x != nil {
+		return x.Prices
+	}
+	return 0
+}
+
+type TotalVolumePoints struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Timestamp   int64   `protobuf:"varint,1,opt,name=timestamp,proto3" json:"timestamp,omitempty"`
+	TotalVolume float64 `protobuf:"fixed64,2,opt,name=total_volume,json=totalVolume,proto3" json:"total_volume,omitempty"`
+}
+
+func (x *TotalVolumePoints) Reset() {
+	*x = TotalVolumePoints{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_grpc_proto_msgTypes[10]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *TotalVolumePoints) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*TotalVolumePoints) ProtoMessage() {}
+
+func (x *TotalVolumePoints) ProtoReflect() protoreflect.Message {
+	mi := &file_grpc_proto_msgTypes[10]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use TotalVolumePoints.ProtoReflect.Descriptor instead.
+func (*TotalVolumePoints) Descriptor() ([]byte, []int) {
+	return file_grpc_proto_rawDescGZIP(), []int{10}
+}
+
+func (x *TotalVolumePoints) GetTimestamp() int64 {
+	if x != nil {
+		return x.Timestamp
+	}
+	return 0
+}
+
+func (x *TotalVolumePoints) GetTotalVolume() float64 {
+	if x != nil {
+		return x.TotalVolume
+	}
+	return 0
 }
 
 type CoinInfo_CoinIds struct {
@@ -275,7 +634,7 @@ type CoinInfo_CoinIds struct {
 func (x *CoinInfo_CoinIds) Reset() {
 	*x = CoinInfo_CoinIds{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_grpc_proto_msgTypes[5]
+		mi := &file_grpc_proto_msgTypes[11]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -288,7 +647,7 @@ func (x *CoinInfo_CoinIds) String() string {
 func (*CoinInfo_CoinIds) ProtoMessage() {}
 
 func (x *CoinInfo_CoinIds) ProtoReflect() protoreflect.Message {
-	mi := &file_grpc_proto_msgTypes[5]
+	mi := &file_grpc_proto_msgTypes[11]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -325,6 +684,171 @@ func (x *CoinInfo_CoinIds) GetName() string {
 	return ""
 }
 
+type MarketPriceInfo_MarketCaps struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	McapTimestamp int64   `protobuf:"varint,1,opt,name=mcap_timestamp,json=mcapTimestamp,proto3" json:"mcap_timestamp,omitempty"`
+	MarketCap     float64 `protobuf:"fixed64,2,opt,name=market_cap,json=marketCap,proto3" json:"market_cap,omitempty"`
+}
+
+func (x *MarketPriceInfo_MarketCaps) Reset() {
+	*x = MarketPriceInfo_MarketCaps{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_grpc_proto_msgTypes[12]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *MarketPriceInfo_MarketCaps) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*MarketPriceInfo_MarketCaps) ProtoMessage() {}
+
+func (x *MarketPriceInfo_MarketCaps) ProtoReflect() protoreflect.Message {
+	mi := &file_grpc_proto_msgTypes[12]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use MarketPriceInfo_MarketCaps.ProtoReflect.Descriptor instead.
+func (*MarketPriceInfo_MarketCaps) Descriptor() ([]byte, []int) {
+	return file_grpc_proto_rawDescGZIP(), []int{4, 0}
+}
+
+func (x *MarketPriceInfo_MarketCaps) GetMcapTimestamp() int64 {
+	if x != nil {
+		return x.McapTimestamp
+	}
+	return 0
+}
+
+func (x *MarketPriceInfo_MarketCaps) GetMarketCap() float64 {
+	if x != nil {
+		return x.MarketCap
+	}
+	return 0
+}
+
+type MarketPriceInfo_PricePoints struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	PpointTimestamp int64   `protobuf:"varint,1,opt,name=ppoint_timestamp,json=ppointTimestamp,proto3" json:"ppoint_timestamp,omitempty"`
+	Prices          float64 `protobuf:"fixed64,2,opt,name=prices,proto3" json:"prices,omitempty"`
+}
+
+func (x *MarketPriceInfo_PricePoints) Reset() {
+	*x = MarketPriceInfo_PricePoints{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_grpc_proto_msgTypes[13]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *MarketPriceInfo_PricePoints) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*MarketPriceInfo_PricePoints) ProtoMessage() {}
+
+func (x *MarketPriceInfo_PricePoints) ProtoReflect() protoreflect.Message {
+	mi := &file_grpc_proto_msgTypes[13]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use MarketPriceInfo_PricePoints.ProtoReflect.Descriptor instead.
+func (*MarketPriceInfo_PricePoints) Descriptor() ([]byte, []int) {
+	return file_grpc_proto_rawDescGZIP(), []int{4, 1}
+}
+
+func (x *MarketPriceInfo_PricePoints) GetPpointTimestamp() int64 {
+	if x != nil {
+		return x.PpointTimestamp
+	}
+	return 0
+}
+
+func (x *MarketPriceInfo_PricePoints) GetPrices() float64 {
+	if x != nil {
+		return x.Prices
+	}
+	return 0
+}
+
+type MarketPriceInfo_TotalVolumePoints struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	TvTimestamp int64   `protobuf:"varint,1,opt,name=tv_timestamp,json=tvTimestamp,proto3" json:"tv_timestamp,omitempty"`
+	TotalVolume float64 `protobuf:"fixed64,2,opt,name=total_volume,json=totalVolume,proto3" json:"total_volume,omitempty"`
+}
+
+func (x *MarketPriceInfo_TotalVolumePoints) Reset() {
+	*x = MarketPriceInfo_TotalVolumePoints{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_grpc_proto_msgTypes[14]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *MarketPriceInfo_TotalVolumePoints) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*MarketPriceInfo_TotalVolumePoints) ProtoMessage() {}
+
+func (x *MarketPriceInfo_TotalVolumePoints) ProtoReflect() protoreflect.Message {
+	mi := &file_grpc_proto_msgTypes[14]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use MarketPriceInfo_TotalVolumePoints.ProtoReflect.Descriptor instead.
+func (*MarketPriceInfo_TotalVolumePoints) Descriptor() ([]byte, []int) {
+	return file_grpc_proto_rawDescGZIP(), []int{4, 2}
+}
+
+func (x *MarketPriceInfo_TotalVolumePoints) GetTvTimestamp() int64 {
+	if x != nil {
+		return x.TvTimestamp
+	}
+	return 0
+}
+
+func (x *MarketPriceInfo_TotalVolumePoints) GetTotalVolume() float64 {
+	if x != nil {
+		return x.TotalVolume
+	}
+	return 0
+}
+
 var File_grpc_proto protoreflect.FileDescriptor
 
 var file_grpc_proto_rawDesc = []byte{
@@ -338,24 +862,94 @@ var file_grpc_proto_rawDesc = []byte{
 	0x28, 0x09, 0x52, 0x02, 0x69, 0x64, 0x12, 0x14, 0x0a, 0x05, 0x74, 0x6f, 0x6b, 0x65, 0x6e, 0x18,
 	0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x05, 0x74, 0x6f, 0x6b, 0x65, 0x6e, 0x12, 0x12, 0x0a, 0x04,
 	0x6e, 0x61, 0x6d, 0x65, 0x18, 0x03, 0x20, 0x01, 0x28, 0x09, 0x52, 0x04, 0x6e, 0x61, 0x6d, 0x65,
-	0x22, 0x07, 0x0a, 0x05, 0x45, 0x6d, 0x70, 0x74, 0x79, 0x22, 0x27, 0x0a, 0x0b, 0x43, 0x6f, 0x69,
-	0x6e, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x18, 0x0a, 0x07, 0x72, 0x65, 0x71, 0x75,
+	0x22, 0x07, 0x0a, 0x05, 0x45, 0x6d, 0x70, 0x74, 0x79, 0x22, 0x59, 0x0a, 0x12, 0x4d, 0x61, 0x72,
+	0x6b, 0x65, 0x74, 0x50, 0x72, 0x69, 0x63, 0x65, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12,
+	0x0e, 0x0a, 0x02, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x02, 0x69, 0x64, 0x12,
+	0x1f, 0x0a, 0x0b, 0x76, 0x73, 0x5f, 0x63, 0x75, 0x72, 0x72, 0x65, 0x6e, 0x63, 0x79, 0x18, 0x02,
+	0x20, 0x01, 0x28, 0x09, 0x52, 0x0a, 0x76, 0x73, 0x43, 0x75, 0x72, 0x72, 0x65, 0x6e, 0x63, 0x79,
+	0x12, 0x12, 0x0a, 0x04, 0x64, 0x61, 0x79, 0x73, 0x18, 0x03, 0x20, 0x01, 0x28, 0x03, 0x52, 0x04,
+	0x64, 0x61, 0x79, 0x73, 0x22, 0xc7, 0x01, 0x0a, 0x13, 0x4d, 0x61, 0x72, 0x6b, 0x65, 0x74, 0x50,
+	0x72, 0x69, 0x63, 0x65, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x38, 0x0a, 0x0a,
+	0x6d, 0x61, 0x72, 0x6b, 0x65, 0x74, 0x63, 0x61, 0x70, 0x73, 0x18, 0x01, 0x20, 0x03, 0x28, 0x0b,
+	0x32, 0x18, 0x2e, 0x63, 0x74, 0x72, 0x61, 0x63, 0x6b, 0x65, 0x72, 0x67, 0x72, 0x70, 0x63, 0x2e,
+	0x4d, 0x61, 0x72, 0x6b, 0x65, 0x74, 0x43, 0x61, 0x70, 0x73, 0x52, 0x0a, 0x6d, 0x61, 0x72, 0x6b,
+	0x65, 0x74, 0x63, 0x61, 0x70, 0x73, 0x12, 0x31, 0x0a, 0x06, 0x70, 0x72, 0x69, 0x63, 0x65, 0x73,
+	0x18, 0x02, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x19, 0x2e, 0x63, 0x74, 0x72, 0x61, 0x63, 0x6b, 0x65,
+	0x72, 0x67, 0x72, 0x70, 0x63, 0x2e, 0x50, 0x72, 0x69, 0x63, 0x65, 0x50, 0x6f, 0x69, 0x6e, 0x74,
+	0x73, 0x52, 0x06, 0x70, 0x72, 0x69, 0x63, 0x65, 0x73, 0x12, 0x43, 0x0a, 0x0c, 0x74, 0x6f, 0x74,
+	0x61, 0x6c, 0x76, 0x6f, 0x6c, 0x75, 0x6d, 0x65, 0x73, 0x18, 0x03, 0x20, 0x03, 0x28, 0x0b, 0x32,
+	0x1f, 0x2e, 0x63, 0x74, 0x72, 0x61, 0x63, 0x6b, 0x65, 0x72, 0x67, 0x72, 0x70, 0x63, 0x2e, 0x54,
+	0x6f, 0x74, 0x61, 0x6c, 0x56, 0x6f, 0x6c, 0x75, 0x6d, 0x65, 0x50, 0x6f, 0x69, 0x6e, 0x74, 0x73,
+	0x52, 0x0c, 0x74, 0x6f, 0x74, 0x61, 0x6c, 0x76, 0x6f, 0x6c, 0x75, 0x6d, 0x65, 0x73, 0x22, 0xf4,
+	0x03, 0x0a, 0x0f, 0x4d, 0x61, 0x72, 0x6b, 0x65, 0x74, 0x50, 0x72, 0x69, 0x63, 0x65, 0x49, 0x6e,
+	0x66, 0x6f, 0x12, 0x48, 0x0a, 0x0a, 0x6d, 0x61, 0x72, 0x6b, 0x65, 0x74, 0x63, 0x61, 0x70, 0x73,
+	0x18, 0x01, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x28, 0x2e, 0x63, 0x74, 0x72, 0x61, 0x63, 0x6b, 0x65,
+	0x72, 0x67, 0x72, 0x70, 0x63, 0x2e, 0x4d, 0x61, 0x72, 0x6b, 0x65, 0x74, 0x50, 0x72, 0x69, 0x63,
+	0x65, 0x49, 0x6e, 0x66, 0x6f, 0x2e, 0x4d, 0x61, 0x72, 0x6b, 0x65, 0x74, 0x43, 0x61, 0x70, 0x73,
+	0x52, 0x0a, 0x6d, 0x61, 0x72, 0x6b, 0x65, 0x74, 0x63, 0x61, 0x70, 0x73, 0x12, 0x41, 0x0a, 0x06,
+	0x70, 0x72, 0x69, 0x63, 0x65, 0x73, 0x18, 0x02, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x29, 0x2e, 0x63,
+	0x74, 0x72, 0x61, 0x63, 0x6b, 0x65, 0x72, 0x67, 0x72, 0x70, 0x63, 0x2e, 0x4d, 0x61, 0x72, 0x6b,
+	0x65, 0x74, 0x50, 0x72, 0x69, 0x63, 0x65, 0x49, 0x6e, 0x66, 0x6f, 0x2e, 0x50, 0x72, 0x69, 0x63,
+	0x65, 0x50, 0x6f, 0x69, 0x6e, 0x74, 0x73, 0x52, 0x06, 0x70, 0x72, 0x69, 0x63, 0x65, 0x73, 0x12,
+	0x53, 0x0a, 0x0c, 0x74, 0x6f, 0x74, 0x61, 0x6c, 0x76, 0x6f, 0x6c, 0x75, 0x6d, 0x65, 0x73, 0x18,
+	0x03, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x2f, 0x2e, 0x63, 0x74, 0x72, 0x61, 0x63, 0x6b, 0x65, 0x72,
+	0x67, 0x72, 0x70, 0x63, 0x2e, 0x4d, 0x61, 0x72, 0x6b, 0x65, 0x74, 0x50, 0x72, 0x69, 0x63, 0x65,
+	0x49, 0x6e, 0x66, 0x6f, 0x2e, 0x54, 0x6f, 0x74, 0x61, 0x6c, 0x56, 0x6f, 0x6c, 0x75, 0x6d, 0x65,
+	0x50, 0x6f, 0x69, 0x6e, 0x74, 0x73, 0x52, 0x0c, 0x74, 0x6f, 0x74, 0x61, 0x6c, 0x76, 0x6f, 0x6c,
+	0x75, 0x6d, 0x65, 0x73, 0x1a, 0x52, 0x0a, 0x0a, 0x4d, 0x61, 0x72, 0x6b, 0x65, 0x74, 0x43, 0x61,
+	0x70, 0x73, 0x12, 0x25, 0x0a, 0x0e, 0x6d, 0x63, 0x61, 0x70, 0x5f, 0x74, 0x69, 0x6d, 0x65, 0x73,
+	0x74, 0x61, 0x6d, 0x70, 0x18, 0x01, 0x20, 0x01, 0x28, 0x03, 0x52, 0x0d, 0x6d, 0x63, 0x61, 0x70,
+	0x54, 0x69, 0x6d, 0x65, 0x73, 0x74, 0x61, 0x6d, 0x70, 0x12, 0x1d, 0x0a, 0x0a, 0x6d, 0x61, 0x72,
+	0x6b, 0x65, 0x74, 0x5f, 0x63, 0x61, 0x70, 0x18, 0x02, 0x20, 0x01, 0x28, 0x01, 0x52, 0x09, 0x6d,
+	0x61, 0x72, 0x6b, 0x65, 0x74, 0x43, 0x61, 0x70, 0x1a, 0x50, 0x0a, 0x0b, 0x50, 0x72, 0x69, 0x63,
+	0x65, 0x50, 0x6f, 0x69, 0x6e, 0x74, 0x73, 0x12, 0x29, 0x0a, 0x10, 0x70, 0x70, 0x6f, 0x69, 0x6e,
+	0x74, 0x5f, 0x74, 0x69, 0x6d, 0x65, 0x73, 0x74, 0x61, 0x6d, 0x70, 0x18, 0x01, 0x20, 0x01, 0x28,
+	0x03, 0x52, 0x0f, 0x70, 0x70, 0x6f, 0x69, 0x6e, 0x74, 0x54, 0x69, 0x6d, 0x65, 0x73, 0x74, 0x61,
+	0x6d, 0x70, 0x12, 0x16, 0x0a, 0x06, 0x70, 0x72, 0x69, 0x63, 0x65, 0x73, 0x18, 0x02, 0x20, 0x01,
+	0x28, 0x01, 0x52, 0x06, 0x70, 0x72, 0x69, 0x63, 0x65, 0x73, 0x1a, 0x59, 0x0a, 0x11, 0x54, 0x6f,
+	0x74, 0x61, 0x6c, 0x56, 0x6f, 0x6c, 0x75, 0x6d, 0x65, 0x50, 0x6f, 0x69, 0x6e, 0x74, 0x73, 0x12,
+	0x21, 0x0a, 0x0c, 0x74, 0x76, 0x5f, 0x74, 0x69, 0x6d, 0x65, 0x73, 0x74, 0x61, 0x6d, 0x70, 0x18,
+	0x01, 0x20, 0x01, 0x28, 0x03, 0x52, 0x0b, 0x74, 0x76, 0x54, 0x69, 0x6d, 0x65, 0x73, 0x74, 0x61,
+	0x6d, 0x70, 0x12, 0x21, 0x0a, 0x0c, 0x74, 0x6f, 0x74, 0x61, 0x6c, 0x5f, 0x76, 0x6f, 0x6c, 0x75,
+	0x6d, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x01, 0x52, 0x0b, 0x74, 0x6f, 0x74, 0x61, 0x6c, 0x56,
+	0x6f, 0x6c, 0x75, 0x6d, 0x65, 0x22, 0x2b, 0x0a, 0x0f, 0x43, 0x6f, 0x69, 0x6e, 0x4c, 0x69, 0x73,
+	0x74, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x18, 0x0a, 0x07, 0x72, 0x65, 0x71, 0x75,
 	0x65, 0x73, 0x74, 0x18, 0x01, 0x20, 0x03, 0x28, 0x09, 0x52, 0x07, 0x72, 0x65, 0x71, 0x75, 0x65,
-	0x73, 0x74, 0x22, 0x41, 0x0a, 0x0c, 0x43, 0x6f, 0x69, 0x6e, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e,
-	0x73, 0x65, 0x12, 0x31, 0x0a, 0x08, 0x63, 0x6f, 0x69, 0x6e, 0x4c, 0x69, 0x73, 0x74, 0x18, 0x01,
-	0x20, 0x03, 0x28, 0x0b, 0x32, 0x15, 0x2e, 0x63, 0x74, 0x72, 0x61, 0x63, 0x6b, 0x65, 0x72, 0x67,
-	0x72, 0x70, 0x63, 0x2e, 0x43, 0x6f, 0x69, 0x6e, 0x49, 0x64, 0x73, 0x52, 0x08, 0x63, 0x6f, 0x69,
-	0x6e, 0x4c, 0x69, 0x73, 0x74, 0x22, 0x43, 0x0a, 0x07, 0x43, 0x6f, 0x69, 0x6e, 0x49, 0x64, 0x73,
-	0x12, 0x0e, 0x0a, 0x02, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x02, 0x69, 0x64,
-	0x12, 0x14, 0x0a, 0x05, 0x74, 0x6f, 0x6b, 0x65, 0x6e, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52,
-	0x05, 0x74, 0x6f, 0x6b, 0x65, 0x6e, 0x12, 0x12, 0x0a, 0x04, 0x6e, 0x61, 0x6d, 0x65, 0x18, 0x03,
-	0x20, 0x01, 0x28, 0x09, 0x52, 0x04, 0x6e, 0x61, 0x6d, 0x65, 0x32, 0x49, 0x0a, 0x0b, 0x47, 0x65,
-	0x74, 0x41, 0x6c, 0x6c, 0x43, 0x6f, 0x69, 0x6e, 0x73, 0x12, 0x3a, 0x0a, 0x05, 0x43, 0x6f, 0x69,
-	0x6e, 0x73, 0x12, 0x13, 0x2e, 0x63, 0x74, 0x72, 0x61, 0x63, 0x6b, 0x65, 0x72, 0x67, 0x72, 0x70,
-	0x63, 0x2e, 0x45, 0x6d, 0x70, 0x74, 0x79, 0x1a, 0x1a, 0x2e, 0x63, 0x74, 0x72, 0x61, 0x63, 0x6b,
-	0x65, 0x72, 0x67, 0x72, 0x70, 0x63, 0x2e, 0x43, 0x6f, 0x69, 0x6e, 0x52, 0x65, 0x73, 0x70, 0x6f,
-	0x6e, 0x73, 0x65, 0x22, 0x00, 0x42, 0x07, 0x5a, 0x05, 0x2e, 0x2e, 0x2f, 0x70, 0x62, 0x62, 0x06,
-	0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x73, 0x74, 0x22, 0x45, 0x0a, 0x10, 0x43, 0x6f, 0x69, 0x6e, 0x4c, 0x69, 0x73, 0x74, 0x52, 0x65,
+	0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x31, 0x0a, 0x08, 0x63, 0x6f, 0x69, 0x6e, 0x4c, 0x69,
+	0x73, 0x74, 0x18, 0x01, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x15, 0x2e, 0x63, 0x74, 0x72, 0x61, 0x63,
+	0x6b, 0x65, 0x72, 0x67, 0x72, 0x70, 0x63, 0x2e, 0x43, 0x6f, 0x69, 0x6e, 0x49, 0x64, 0x73, 0x52,
+	0x08, 0x63, 0x6f, 0x69, 0x6e, 0x4c, 0x69, 0x73, 0x74, 0x22, 0x45, 0x0a, 0x07, 0x43, 0x6f, 0x69,
+	0x6e, 0x49, 0x64, 0x73, 0x12, 0x0e, 0x0a, 0x02, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09,
+	0x52, 0x02, 0x69, 0x64, 0x12, 0x16, 0x0a, 0x06, 0x73, 0x79, 0x6d, 0x62, 0x6f, 0x6c, 0x18, 0x02,
+	0x20, 0x01, 0x28, 0x09, 0x52, 0x06, 0x73, 0x79, 0x6d, 0x62, 0x6f, 0x6c, 0x12, 0x12, 0x0a, 0x04,
+	0x6e, 0x61, 0x6d, 0x65, 0x18, 0x03, 0x20, 0x01, 0x28, 0x09, 0x52, 0x04, 0x6e, 0x61, 0x6d, 0x65,
+	0x22, 0x49, 0x0a, 0x0a, 0x4d, 0x61, 0x72, 0x6b, 0x65, 0x74, 0x43, 0x61, 0x70, 0x73, 0x12, 0x1c,
+	0x0a, 0x09, 0x74, 0x69, 0x6d, 0x65, 0x73, 0x74, 0x61, 0x6d, 0x70, 0x18, 0x01, 0x20, 0x01, 0x28,
+	0x03, 0x52, 0x09, 0x74, 0x69, 0x6d, 0x65, 0x73, 0x74, 0x61, 0x6d, 0x70, 0x12, 0x1d, 0x0a, 0x0a,
+	0x6d, 0x61, 0x72, 0x6b, 0x65, 0x74, 0x5f, 0x63, 0x61, 0x70, 0x18, 0x02, 0x20, 0x01, 0x28, 0x01,
+	0x52, 0x09, 0x6d, 0x61, 0x72, 0x6b, 0x65, 0x74, 0x43, 0x61, 0x70, 0x22, 0x43, 0x0a, 0x0b, 0x50,
+	0x72, 0x69, 0x63, 0x65, 0x50, 0x6f, 0x69, 0x6e, 0x74, 0x73, 0x12, 0x1c, 0x0a, 0x09, 0x74, 0x69,
+	0x6d, 0x65, 0x73, 0x74, 0x61, 0x6d, 0x70, 0x18, 0x01, 0x20, 0x01, 0x28, 0x03, 0x52, 0x09, 0x74,
+	0x69, 0x6d, 0x65, 0x73, 0x74, 0x61, 0x6d, 0x70, 0x12, 0x16, 0x0a, 0x06, 0x70, 0x72, 0x69, 0x63,
+	0x65, 0x73, 0x18, 0x02, 0x20, 0x01, 0x28, 0x01, 0x52, 0x06, 0x70, 0x72, 0x69, 0x63, 0x65, 0x73,
+	0x22, 0x54, 0x0a, 0x11, 0x54, 0x6f, 0x74, 0x61, 0x6c, 0x56, 0x6f, 0x6c, 0x75, 0x6d, 0x65, 0x50,
+	0x6f, 0x69, 0x6e, 0x74, 0x73, 0x12, 0x1c, 0x0a, 0x09, 0x74, 0x69, 0x6d, 0x65, 0x73, 0x74, 0x61,
+	0x6d, 0x70, 0x18, 0x01, 0x20, 0x01, 0x28, 0x03, 0x52, 0x09, 0x74, 0x69, 0x6d, 0x65, 0x73, 0x74,
+	0x61, 0x6d, 0x70, 0x12, 0x21, 0x0a, 0x0c, 0x74, 0x6f, 0x74, 0x61, 0x6c, 0x5f, 0x76, 0x6f, 0x6c,
+	0x75, 0x6d, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x01, 0x52, 0x0b, 0x74, 0x6f, 0x74, 0x61, 0x6c,
+	0x56, 0x6f, 0x6c, 0x75, 0x6d, 0x65, 0x32, 0x9d, 0x01, 0x0a, 0x07, 0x47, 0x65, 0x74, 0x43, 0x6f,
+	0x69, 0x6e, 0x12, 0x3e, 0x0a, 0x05, 0x43, 0x6f, 0x69, 0x6e, 0x73, 0x12, 0x13, 0x2e, 0x63, 0x74,
+	0x72, 0x61, 0x63, 0x6b, 0x65, 0x72, 0x67, 0x72, 0x70, 0x63, 0x2e, 0x45, 0x6d, 0x70, 0x74, 0x79,
+	0x1a, 0x1e, 0x2e, 0x63, 0x74, 0x72, 0x61, 0x63, 0x6b, 0x65, 0x72, 0x67, 0x72, 0x70, 0x63, 0x2e,
+	0x43, 0x6f, 0x69, 0x6e, 0x4c, 0x69, 0x73, 0x74, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65,
+	0x22, 0x00, 0x12, 0x52, 0x0a, 0x09, 0x43, 0x6f, 0x69, 0x6e, 0x50, 0x72, 0x69, 0x63, 0x65, 0x12,
+	0x20, 0x2e, 0x63, 0x74, 0x72, 0x61, 0x63, 0x6b, 0x65, 0x72, 0x67, 0x72, 0x70, 0x63, 0x2e, 0x4d,
+	0x61, 0x72, 0x6b, 0x65, 0x74, 0x50, 0x72, 0x69, 0x63, 0x65, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73,
+	0x74, 0x1a, 0x21, 0x2e, 0x63, 0x74, 0x72, 0x61, 0x63, 0x6b, 0x65, 0x72, 0x67, 0x72, 0x70, 0x63,
+	0x2e, 0x4d, 0x61, 0x72, 0x6b, 0x65, 0x74, 0x50, 0x72, 0x69, 0x63, 0x65, 0x52, 0x65, 0x73, 0x70,
+	0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x42, 0x07, 0x5a, 0x05, 0x2e, 0x2e, 0x2f, 0x70, 0x62, 0x62,
+	0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -370,25 +964,42 @@ func file_grpc_proto_rawDescGZIP() []byte {
 	return file_grpc_proto_rawDescData
 }
 
-var file_grpc_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
+var file_grpc_proto_msgTypes = make([]protoimpl.MessageInfo, 15)
 var file_grpc_proto_goTypes = []interface{}{
-	(*CoinInfo)(nil),         // 0: ctrackergrpc.CoinInfo
-	(*Empty)(nil),            // 1: ctrackergrpc.Empty
-	(*CoinRequest)(nil),      // 2: ctrackergrpc.CoinRequest
-	(*CoinResponse)(nil),     // 3: ctrackergrpc.CoinResponse
-	(*CoinIds)(nil),          // 4: ctrackergrpc.CoinIds
-	(*CoinInfo_CoinIds)(nil), // 5: ctrackergrpc.CoinInfo.CoinIds
+	(*CoinInfo)(nil),                          // 0: ctrackergrpc.CoinInfo
+	(*Empty)(nil),                             // 1: ctrackergrpc.Empty
+	(*MarketPriceRequest)(nil),                // 2: ctrackergrpc.MarketPriceRequest
+	(*MarketPriceResponse)(nil),               // 3: ctrackergrpc.MarketPriceResponse
+	(*MarketPriceInfo)(nil),                   // 4: ctrackergrpc.MarketPriceInfo
+	(*CoinListRequest)(nil),                   // 5: ctrackergrpc.CoinListRequest
+	(*CoinListResponse)(nil),                  // 6: ctrackergrpc.CoinListResponse
+	(*CoinIds)(nil),                           // 7: ctrackergrpc.CoinIds
+	(*MarketCaps)(nil),                        // 8: ctrackergrpc.MarketCaps
+	(*PricePoints)(nil),                       // 9: ctrackergrpc.PricePoints
+	(*TotalVolumePoints)(nil),                 // 10: ctrackergrpc.TotalVolumePoints
+	(*CoinInfo_CoinIds)(nil),                  // 11: ctrackergrpc.CoinInfo.CoinIds
+	(*MarketPriceInfo_MarketCaps)(nil),        // 12: ctrackergrpc.MarketPriceInfo.MarketCaps
+	(*MarketPriceInfo_PricePoints)(nil),       // 13: ctrackergrpc.MarketPriceInfo.PricePoints
+	(*MarketPriceInfo_TotalVolumePoints)(nil), // 14: ctrackergrpc.MarketPriceInfo.TotalVolumePoints
 }
 var file_grpc_proto_depIdxs = []int32{
-	0, // 0: ctrackergrpc.CoinInfo.coinList:type_name -> ctrackergrpc.CoinInfo
-	4, // 1: ctrackergrpc.CoinResponse.coinList:type_name -> ctrackergrpc.CoinIds
-	1, // 2: ctrackergrpc.GetAllCoins.Coins:input_type -> ctrackergrpc.Empty
-	3, // 3: ctrackergrpc.GetAllCoins.Coins:output_type -> ctrackergrpc.CoinResponse
-	3, // [3:4] is the sub-list for method output_type
-	2, // [2:3] is the sub-list for method input_type
-	2, // [2:2] is the sub-list for extension type_name
-	2, // [2:2] is the sub-list for extension extendee
-	0, // [0:2] is the sub-list for field type_name
+	0,  // 0: ctrackergrpc.CoinInfo.coinList:type_name -> ctrackergrpc.CoinInfo
+	8,  // 1: ctrackergrpc.MarketPriceResponse.marketcaps:type_name -> ctrackergrpc.MarketCaps
+	9,  // 2: ctrackergrpc.MarketPriceResponse.prices:type_name -> ctrackergrpc.PricePoints
+	10, // 3: ctrackergrpc.MarketPriceResponse.totalvolumes:type_name -> ctrackergrpc.TotalVolumePoints
+	12, // 4: ctrackergrpc.MarketPriceInfo.marketcaps:type_name -> ctrackergrpc.MarketPriceInfo.MarketCaps
+	13, // 5: ctrackergrpc.MarketPriceInfo.prices:type_name -> ctrackergrpc.MarketPriceInfo.PricePoints
+	14, // 6: ctrackergrpc.MarketPriceInfo.totalvolumes:type_name -> ctrackergrpc.MarketPriceInfo.TotalVolumePoints
+	7,  // 7: ctrackergrpc.CoinListResponse.coinList:type_name -> ctrackergrpc.CoinIds
+	1,  // 8: ctrackergrpc.GetCoin.Coins:input_type -> ctrackergrpc.Empty
+	2,  // 9: ctrackergrpc.GetCoin.CoinPrice:input_type -> ctrackergrpc.MarketPriceRequest
+	6,  // 10: ctrackergrpc.GetCoin.Coins:output_type -> ctrackergrpc.CoinListResponse
+	3,  // 11: ctrackergrpc.GetCoin.CoinPrice:output_type -> ctrackergrpc.MarketPriceResponse
+	10, // [10:12] is the sub-list for method output_type
+	8,  // [8:10] is the sub-list for method input_type
+	8,  // [8:8] is the sub-list for extension type_name
+	8,  // [8:8] is the sub-list for extension extendee
+	0,  // [0:8] is the sub-list for field type_name
 }
 
 func init() { file_grpc_proto_init() }
@@ -422,7 +1033,7 @@ func file_grpc_proto_init() {
 			}
 		}
 		file_grpc_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*CoinRequest); i {
+			switch v := v.(*MarketPriceRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -434,7 +1045,7 @@ func file_grpc_proto_init() {
 			}
 		}
 		file_grpc_proto_msgTypes[3].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*CoinResponse); i {
+			switch v := v.(*MarketPriceResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -446,7 +1057,7 @@ func file_grpc_proto_init() {
 			}
 		}
 		file_grpc_proto_msgTypes[4].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*CoinIds); i {
+			switch v := v.(*MarketPriceInfo); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -458,7 +1069,115 @@ func file_grpc_proto_init() {
 			}
 		}
 		file_grpc_proto_msgTypes[5].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*CoinListRequest); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_grpc_proto_msgTypes[6].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*CoinListResponse); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_grpc_proto_msgTypes[7].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*CoinIds); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_grpc_proto_msgTypes[8].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*MarketCaps); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_grpc_proto_msgTypes[9].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*PricePoints); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_grpc_proto_msgTypes[10].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*TotalVolumePoints); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_grpc_proto_msgTypes[11].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*CoinInfo_CoinIds); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_grpc_proto_msgTypes[12].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*MarketPriceInfo_MarketCaps); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_grpc_proto_msgTypes[13].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*MarketPriceInfo_PricePoints); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_grpc_proto_msgTypes[14].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*MarketPriceInfo_TotalVolumePoints); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -476,7 +1195,7 @@ func file_grpc_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_grpc_proto_rawDesc,
 			NumEnums:      0,
-			NumMessages:   6,
+			NumMessages:   15,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

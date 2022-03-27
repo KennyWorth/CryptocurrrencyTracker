@@ -14,86 +14,132 @@ import (
 // Requires gRPC-Go v1.32.0 or later.
 const _ = grpc.SupportPackageIsVersion7
 
-// GetAllCoinsClient is the client API for GetAllCoins service.
+// GetCoinClient is the client API for GetCoin service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
-type GetAllCoinsClient interface {
-	Coins(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*CoinResponse, error)
+type GetCoinClient interface {
+	// Gets list of all coins on CoinGecko and compares to cache. If cached data is older than 24h
+	// then Coins will replace old cached data with updated coins list.
+	Coins(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*CoinListResponse, error)
+	// Gets current market price of a specified coin compared to usd within the range of the requested amount of days
+	// example: https://api.coingecko.com/api/v3/coins/bitcoin/market_chart?vs_currency=usd&days=5
+	// if cached data is older that 15 minutes, will cache updated prices during request.
+	CoinPrice(ctx context.Context, in *MarketPriceRequest, opts ...grpc.CallOption) (*MarketPriceResponse, error)
 }
 
-type getAllCoinsClient struct {
+type getCoinClient struct {
 	cc grpc.ClientConnInterface
 }
 
-func NewGetAllCoinsClient(cc grpc.ClientConnInterface) GetAllCoinsClient {
-	return &getAllCoinsClient{cc}
+func NewGetCoinClient(cc grpc.ClientConnInterface) GetCoinClient {
+	return &getCoinClient{cc}
 }
 
-func (c *getAllCoinsClient) Coins(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*CoinResponse, error) {
-	out := new(CoinResponse)
-	err := c.cc.Invoke(ctx, "/ctrackergrpc.GetAllCoins/Coins", in, out, opts...)
+func (c *getCoinClient) Coins(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*CoinListResponse, error) {
+	out := new(CoinListResponse)
+	err := c.cc.Invoke(ctx, "/ctrackergrpc.GetCoin/Coins", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-// GetAllCoinsServer is the server API for GetAllCoins service.
-// All implementations must embed UnimplementedGetAllCoinsServer
+func (c *getCoinClient) CoinPrice(ctx context.Context, in *MarketPriceRequest, opts ...grpc.CallOption) (*MarketPriceResponse, error) {
+	out := new(MarketPriceResponse)
+	err := c.cc.Invoke(ctx, "/ctrackergrpc.GetCoin/CoinPrice", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// GetCoinServer is the server API for GetCoin service.
+// All implementations must embed UnimplementedGetCoinServer
 // for forward compatibility
-type GetAllCoinsServer interface {
-	Coins(context.Context, *Empty) (*CoinResponse, error)
-	mustEmbedUnimplementedGetAllCoinsServer()
+type GetCoinServer interface {
+	// Gets list of all coins on CoinGecko and compares to cache. If cached data is older than 24h
+	// then Coins will replace old cached data with updated coins list.
+	Coins(context.Context, *Empty) (*CoinListResponse, error)
+	// Gets current market price of a specified coin compared to usd within the range of the requested amount of days
+	// example: https://api.coingecko.com/api/v3/coins/bitcoin/market_chart?vs_currency=usd&days=5
+	// if cached data is older that 15 minutes, will cache updated prices during request.
+	CoinPrice(context.Context, *MarketPriceRequest) (*MarketPriceResponse, error)
+	mustEmbedUnimplementedGetCoinServer()
 }
 
-// UnimplementedGetAllCoinsServer must be embedded to have forward compatible implementations.
-type UnimplementedGetAllCoinsServer struct {
+// UnimplementedGetCoinServer must be embedded to have forward compatible implementations.
+type UnimplementedGetCoinServer struct {
 }
 
-func (UnimplementedGetAllCoinsServer) Coins(context.Context, *Empty) (*CoinResponse, error) {
+func (UnimplementedGetCoinServer) Coins(context.Context, *Empty) (*CoinListResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Coins not implemented")
 }
-func (UnimplementedGetAllCoinsServer) mustEmbedUnimplementedGetAllCoinsServer() {}
+func (UnimplementedGetCoinServer) CoinPrice(context.Context, *MarketPriceRequest) (*MarketPriceResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CoinPrice not implemented")
+}
+func (UnimplementedGetCoinServer) mustEmbedUnimplementedGetCoinServer() {}
 
-// UnsafeGetAllCoinsServer may be embedded to opt out of forward compatibility for this service.
-// Use of this interface is not recommended, as added methods to GetAllCoinsServer will
+// UnsafeGetCoinServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to GetCoinServer will
 // result in compilation errors.
-type UnsafeGetAllCoinsServer interface {
-	mustEmbedUnimplementedGetAllCoinsServer()
+type UnsafeGetCoinServer interface {
+	mustEmbedUnimplementedGetCoinServer()
 }
 
-func RegisterGetAllCoinsServer(s grpc.ServiceRegistrar, srv GetAllCoinsServer) {
-	s.RegisterService(&GetAllCoins_ServiceDesc, srv)
+func RegisterGetCoinServer(s grpc.ServiceRegistrar, srv GetCoinServer) {
+	s.RegisterService(&GetCoin_ServiceDesc, srv)
 }
 
-func _GetAllCoins_Coins_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _GetCoin_Coins_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(Empty)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(GetAllCoinsServer).Coins(ctx, in)
+		return srv.(GetCoinServer).Coins(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/ctrackergrpc.GetAllCoins/Coins",
+		FullMethod: "/ctrackergrpc.GetCoin/Coins",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(GetAllCoinsServer).Coins(ctx, req.(*Empty))
+		return srv.(GetCoinServer).Coins(ctx, req.(*Empty))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-// GetAllCoins_ServiceDesc is the grpc.ServiceDesc for GetAllCoins service.
+func _GetCoin_CoinPrice_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MarketPriceRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GetCoinServer).CoinPrice(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/ctrackergrpc.GetCoin/CoinPrice",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GetCoinServer).CoinPrice(ctx, req.(*MarketPriceRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+// GetCoin_ServiceDesc is the grpc.ServiceDesc for GetCoin service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
-var GetAllCoins_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "ctrackergrpc.GetAllCoins",
-	HandlerType: (*GetAllCoinsServer)(nil),
+var GetCoin_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "ctrackergrpc.GetCoin",
+	HandlerType: (*GetCoinServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
 			MethodName: "Coins",
-			Handler:    _GetAllCoins_Coins_Handler,
+			Handler:    _GetCoin_Coins_Handler,
+		},
+		{
+			MethodName: "CoinPrice",
+			Handler:    _GetCoin_CoinPrice_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
