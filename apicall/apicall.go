@@ -43,7 +43,6 @@ func UpdateFromCoinGeckoApi(command string) (CoinIds, error) {
 	}
 	return coinIds, err
 }
-
 func GetCoinList(coinIds CoinIds) *pb.CoinListResponse {
 	response := &pb.CoinListResponse{}
 	coins := response.CoinList
@@ -58,7 +57,6 @@ func GetCoinList(coinIds CoinIds) *pb.CoinListResponse {
 	response.CoinList = coins
 	return response
 }
-
 func CoinListRoutine(command string) (*pb.CoinListResponse, error) {
 	coinListFromRedis, err := redisdb.GetByteArray(command)
 	if err != nil {

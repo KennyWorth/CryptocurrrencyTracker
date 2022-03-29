@@ -1,7 +1,6 @@
 syntax = "proto3";
 package ctrackergrpc;
 option go_package = "../pb";
-
 message CoinInfo {
     message CoinIds {
         string id = 1;
@@ -76,7 +75,8 @@ service GetCoin {
     // Gets current market price of a specified coin compared to usd within the range of the requested amount of days
     // example: https://api.coingecko.com/api/v3/coins/bitcoin/market_chart?vs_currency=usd&days=5
     // if cached data is older that 15 minutes, will cache updated prices during request.
-    rpc CoinPrice(MarketPriceRequest) returns (MarketPriceResponse) {}
+    rpc CoinPrice(MarketPriceRequest) returns (MarketPriceResponse) {
+    }
 }
 
 // Refresh Proto & gRPC Proto
