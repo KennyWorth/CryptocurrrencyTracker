@@ -38,12 +38,10 @@ func NewCryptoGrpcService() *CryptoGrpcService {
 	}
 }
 func (s *CryptoGrpcService) Coins(ctx context.Context, empty *pb.Empty) (*pb.CoinListResponse, error) {
-	fmt.Print("Coins here")
 	response, err := apicall.CoinListRoutine("coins/list")
 	if err != nil {
 		return nil, err
 	}
-	fmt.Println("no errors before return response")
 	return response, nil
 }
 

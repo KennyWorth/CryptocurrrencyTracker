@@ -35,21 +35,3 @@ func NewGrpcServer() {
 	}
 	fmt.Println("shutdown completed")
 }
-
-// func UpdateFromApi(command string) (pb.CoinListResponse, error) {
-// 	url := fmt.Sprintf("api.coingecko.com/api/v3/%v", command)
-// 	method := "GET"
-// 	client := &http.Client{}
-// 	req, err := http.NewRequest(method, url, nil)
-// 	if err != nil {
-// 		return pb.CoinListResponse{}, err
-// 	}
-// 	res, err := client.Do(req)
-// 	if err != nil {
-// 		return pb.CoinListResponse{}, err
-// 	}
-// 	defer res.Body.Close()
-// 	body, err := ioutil.ReadAll(res.Body)
-// 	fmt.Print(body)
-// 	return pb.CoinListResponse{}, err
-// }

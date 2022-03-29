@@ -28,16 +28,13 @@ func ApiCall(command string) ([]byte, error) {
 	client := &http.Client{}
 	req, err := http.NewRequest(method, url, nil)
 	if err != nil {
-		fmt.Printf("error creating request::: %v\n", err)
 	}
 	res, err := client.Do(req)
 	if err != nil {
-		fmt.Printf("error invoking command::: %v\n", err)
 	}
 	defer res.Body.Close()
 	body, err := ioutil.ReadAll(res.Body)
 	if err != nil {
-		fmt.Printf("error reading body::: %v\n", err)
 	}
 	return body, err
 }
@@ -47,7 +44,6 @@ func UpdatePrice(body []byte) PriceData {
 	var priceData PriceData
 	err := json.Unmarshal(body, &priceData)
 	if err != nil {
-		fmt.Println(err, " --unmarshaling body data to priceData in UpdatePrice--")
 	}
 	return priceData
 }
@@ -70,13 +66,11 @@ func MarketPriceRoutine(urlCommand string, coinName string) (*pb.MarketPriceResp
 	//TODO: implement cache value marshal and return,
 	storedExpirationString, err := db.Get(coinName)
 	if err != nil && err == redis.Nil {
-		fmt.Println("Line 73")
 		return UpdateCache(urlCommand, coinName)
 	}
 	if err == nil {
-		fmt.Println("Line 76")
 		storedTimestamp, _ := time.Parse(time.RFC1123, storedExpirationString)
-		fmt.Println("Time stamp Expired? :", storedTimestamp.Before(time.Now()), storedTimestamp, "Current Time", time.Now(), "$###", storedExpirationString)
+		fmt.Println("Time stamp Expired? :", storedTimestamp.Before(time.Now()), "Stored Timestamp: ", storedTimestamp, "Current Time", time.Now())
 		if storedTimestamp.Before(time.Now()) {
 			fmt.Println("TimeStamp expired, getting refreshed Data")
 			return UpdateCache(urlCommand, coinName)

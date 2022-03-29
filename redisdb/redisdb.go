@@ -8,7 +8,7 @@ import (
 
 func RClient() *redis.Client {
 	client := redis.NewClient(&redis.Options{
-		Addr: "localhost:6379",
+		Addr: "my-redis-cluster.wsivg3.0001.use2.cache.amazonaws.com:11211",
 	})
 	return client
 }
